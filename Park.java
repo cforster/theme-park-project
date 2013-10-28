@@ -53,9 +53,9 @@ public class Park {
 
 		//create ride lunch
 		Ride lunch = new Ride(this);
-		lunch.APPEAL = 0.01;
-		lunch.RIDELENGTH = gen.nextInt(10)+2;
-		lunch.RIDERS = gen.nextInt(100)+50;
+		lunch.APPEAL = 0.1;
+		lunch.RIDELENGTH = gen.nextInt(30)+10;
+		lunch.RIDERS = CUSTCOUNT;
 		lunch.init();
 		rides.add(lunch);
 
@@ -76,10 +76,17 @@ public class Park {
 			for (Customer customer : customers) {
 				customer.tick();
 			}
+			
+		//change appeal of lunch at peak times
+		if(time > maxtime/2 - 110 || time < maxtime/2 + 110) {
+		rides.get(rides.size()-1).APPEAL=.75;
+		}
+		else {
+		rides.get(rides.size()-1).APPEAL=.1;
+		}
 
 			time++;			
 		}
-
 		drawRideChart(rides);
 		drawAttendChart(customers);
 	}
