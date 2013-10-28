@@ -51,6 +51,14 @@ public class Park {
 			rides.add(r);
 		}
 
+		//create ride lunch
+		Ride lunch = new Ride(this);
+		lunch.APPEAL = 0.01;
+		lunch.RIDELENGTH = gen.nextInt(10)+2;
+		lunch.RIDERS = gen.nextInt(100)+50;
+		lunch.init();
+		rides.add(lunch);
+
 		//make the customers:
 		for (int i = 0; i < CUSTCOUNT; i++) {
 			Customer c = new Customer(this);
