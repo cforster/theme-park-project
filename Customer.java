@@ -35,7 +35,7 @@ public class Customer {
 			for (int i = 0; i < 100*FREEFACTOR; i++) {  //try to get on a ride,
 														//then tick backoff.
 				Ride r = p.rides.get(gen.nextInt(p.rides.size()));
-				double threshold = r.APPEAL*Math.pow(r.waittime[p.time],-1.0*WAITFACTOR);
+				double threshold = r.APPEAL*Math.pow(r.waittime[p.time],-1.0*WAITFACTOR); //Math.pow returns first argument raised to the second argument
 				if(gen.nextDouble()<threshold) {
 					r.line.put(this);
 					return;

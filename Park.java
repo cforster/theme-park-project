@@ -14,6 +14,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 /**
  * 
  * @author cforster
+ * @author pirateCaptain
  *
  *
  *
@@ -48,17 +49,27 @@ public class Park {
 			r.RIDELENGTH = gen.nextInt(4) + 2;
 			r.RIDERS = gen.nextInt(100) + 20;
 			r.init();
-			rides.add(r);
+ 			rides.add(r);
 		}
 
-		//make the customers:
+ 		//make the customers:
 		for (int i = 0; i < CUSTCOUNT; i++) {
 			Customer c = new Customer(this);
-			c.starttime = gen.nextInt(maxtime/2);
-			c.endtime = gen.nextInt(maxtime/2) + maxtime/2;
+			int startTimeTemp = startTimeGen(800); //generates arrival time
+			c.starttime = startTimeTemp;
+		        int endTimeTemp = endTimeGen(800); //generates departure time throughout the day
+			while (true) { //checks that the end time is later than the arrival time
+			if (endTimeTemp > startTimeTemp) {
+			    c.endtime = endTimeTemp;
+			    break;
+			}
+			else endTimeGen(800);
+			break;
+			}
+
 			customers.add(c);
 		}
-
+		
 		//run sim:
 		while (time < maxtime) {
 			for (Ride ride : rides) {
@@ -146,4 +157,65 @@ public class Park {
 	public static void main(String[] args) {
 		new Park();
 	}
+    
+    /** @param number range to generate from
+	@return the customer's departure time
+     */
+    int endTimeGen (int x) {
+	int finalEndTime = 0;
+	Random gen = new Random();
+	int placeholderInt = gen.nextInt(x);
+	if (placeholderInt <= 20) { //first two hours
+	    finalEndTime = gen.nextInt(120);
+        }
+	if (placeholderInt >20 && placeholderInt <= 100) { //second two hours
+	    finalEndTime = gen.nextInt(120) + 120;  
+        }
+        if (placeholderInt >100 && placeholderInt <= 160) { //fifth hour
+	    finalEndTime = gen.nextInt(60) + 240;
+	}
+	if (placeholderInt >160 && placeholderInt <= 300) { // sixth, seventh, and eighth hours
+	    finalEndTime = gen.nextInt(180) + 300;
+        }
+        if (placeholderInt >300 && placeholderInt <= 500) { // ninth hour
+	    finalEndTime = gen.nextInt(60) + 480;
+        }
+        if (placeholderInt >500 && placeholderInt <= 800) { // tenth and eleventh hours
+	    finalEndTime = gen.nextInt(120) + 540;
+	}
+	return finalEndTime;
+    }
+
+  
+    /**
+       @param the number range to generate from
+       @return the customer's departure time
+     */
+    int startTimeGen (int x) { // start time generator function
+		    int finalStartTime = 0;
+		    Random gen = new Random();
+		    int placeholderInt = gen.nextInt(x);
+		    if (placeholderInt <= 200) { //first two hours
+			finalStartTime = gen.nextInt(120);
+		    }
+		    if (placeholderInt >200 && placeholderInt <= 400) { //second two hours
+			finalStartTime = gen.nextInt(120) + 120;  
+		    }
+		    if (placeholderInt >400 && placeholderInt <= 600) { //fifth hour
+			finalStartTime = gen.nextInt(60) + 240;
+		    }
+		    if (placeholderInt >600 && placeholderInt <= 700) { // sixth, seventh, and eighth hours
+			finalStartTime = gen.nextInt(180) + 300;
+		    }
+		    if (placeholderInt >700 && placeholderInt <= 770) { // ninth hour
+			finalStartTime = gen.nextInt(60) + 480;
+		    }
+		    if (placeholderInt >770 && placeholderInt <= 799) { // tenth and eleventh hours
+			finalStartTime = gen.nextInt(120) + 540;
+		    }
+		    if (placeholderInt >799) {
+			finalStartTime = gen.nextInt(60) + 660;
+		    }
+		    return finalStartTime;
+		}
 }
