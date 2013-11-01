@@ -18,7 +18,7 @@ public class Ride {
 		return String.format("R:%.3f:%d:%d", APPEAL,RIDELENGTH,RIDERS);
 	}
 
-    public Ride(int maxtime) {
+       public Ride(int maxtime) {
 		line = new Queue<Customer>(maxtime);
 		ride = new Queue<Customer>(maxtime);
 		//set size of queue:
