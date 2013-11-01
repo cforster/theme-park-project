@@ -135,7 +135,12 @@ public class Park {
 		//graph:
 		XYSeries[] series = new XYSeries[rideData.size()];
 		for (int j = 0; j<rideData.size(); j++) {
-			series[j] = new XYSeries(rideData.get(j).toString());
+		    String key = rideData.get(j).toString();
+		    int count = 0;
+		    for(XYSeries s : series)
+			if(s != null && s.toString() == key)
+			    count++;
+		    series[j] = new XYSeries(count == 0 ? key : key + " (" + (count + 1) + ")");
 			addAll(series[j], rideData.get(j).waittime);
 			dataset.addSeries(series[j]);
 		}
