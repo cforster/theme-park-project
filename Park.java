@@ -77,7 +77,7 @@ public class Park {
 		}
 
 		drawRideChart(rides);
-		drawAttendChart(customers);
+		drawAttendChart(duration, customers);
 	}
 
     public List<Ride> getRides()
@@ -85,7 +85,7 @@ public class Park {
 	return rides;
     }
 	
-	public void drawAttendChart(List<Customer> custData) {
+    public void drawAttendChart(int duration, List<Customer> custData) {
 		String title = "attendance chart";
 		ApplicationFrame frame;
 		JFreeChart chart;
@@ -96,7 +96,7 @@ public class Park {
 		XYSeries free = new XYSeries("free");
 		XYSeries wait = new XYSeries("wait");
 		XYSeries ride = new XYSeries("ride");
-		for (int j = 0; j<this.maxtime; j++) {
+		for (int j = 0; j<duration; j++) {
 			int a = 0;
 			int f = 0;
 			int w = 0;
@@ -135,7 +135,12 @@ public class Park {
 		//graph:
 		XYSeries[] series = new XYSeries[rideData.size()];
 		for (int j = 0; j<rideData.size(); j++) {
-			series[j] = new XYSeries(rideData.get(j).toString());
+		    String key = rideData.get(j).toString();
+		    int count = 0;
+		    for(XYSeries s : series)
+			if(s != null && s.toString() == key)
+			    count++;
+		    series[j] = new XYSeries(count == 0 ? key : key + " (" + (count + 1) + ")");
 			addAll(series[j], rideData.get(j).waittime);
 			dataset.addSeries(series[j]);
 		}
