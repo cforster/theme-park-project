@@ -14,7 +14,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 /**
  * 
  * @author cforster
- * @author pirateCaptain
+ * 
  *
  *
  *
