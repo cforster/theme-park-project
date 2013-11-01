@@ -29,6 +29,7 @@ public class Park {
 	int time=0;
 	public List<Customer> customers;
 	public List<Ride> rides;
+     
 
 	//main simulation:
 	public Park() {
@@ -41,15 +42,32 @@ public class Park {
 		Random gen = new Random();
 		customers = new ArrayList<Customer>();
 		rides = new ArrayList<Ride>();
+		boolean  rain = false;   
+		
+		//Factoring in rain
 
+		int chanceWeather = 0;
+		chanceWeather = gen.nextInt(10);        //Rain will occur 10% of the time, when this variable is 2
+		 if(chanceWeather==2)
+			{
+			    System.out.println("It's raining!");
+			    rain = true;
+			    CUSTCOUNT = CUSTCOUNT/2;                //Cuts attendence in half when there is rain, people won't go to a theme park as often in rain
+			}
 		//make the rides:
 		for (int i = 0; i < RIDECOUNT; i++) {
 			Ride r = new Ride(this);
 			r.APPEAL = 0.1+0.9*gen.nextDouble(); 
 			r.RIDELENGTH = gen.nextInt(4) + 2;
 			r.RIDERS = gen.nextInt(100) + 20;
+			r.INDOORS = gen.nextBoolean();                  //All rides gain a property of indoors or outdoors
 			r.init();
+<<<<<<< HEAD
  			rides.add(r);
+=======
+			rides.add(r);
+			r.rain(rain, r);                    //runs the rain function in the Ride class, which changes the appeal of th erides
+>>>>>>> 7a3512126100c2ae307f09c07ae22ec61fb47ee2
 		}
 
  		//make the customers:
@@ -82,8 +100,19 @@ public class Park {
 
 			time++;			
 		}
-
-		drawRideChart(rides);
+        
+		if(chanceWeather == 2){             //Draws separate ride charts for each ride, only in rain, but can be changed if you want individual ride charts at any point
+		    
+		    for(int i = 0; i<rides.size(); i++)
+			{
+			    drawRideChart(rides, i, rain);
+			}  
+		}   
+		else                                //Draws all of the rides on one chart
+		{    
+		    int i = 0;
+		    drawRideChart(rides, i, rain);
+		}
 		drawAttendChart(customers);
 	}
 	
@@ -128,18 +157,40 @@ public class Park {
 	}
 
 	
-	public void drawRideChart(List<Ride> rideData) {
+    public void drawRideChart(List<Ride> rideData, int i, boolean rain) {
 		String title = "ride chart";
+        
+        //The following 8 lines add indoor ride to the title of the charts that are indoors, and outdoor ride to the title of the charts that are outdoors
+		if (rain==true)
+		{
+		    if (rideData.get(i).INDOORS == true) title = title + " (Indoor Ride)";
+		    else
+		    {
+			title = title + " (Outdoor Ride)";
+		    }
+		}
 		ApplicationFrame frame;
 		JFreeChart chart;
 		XYSeriesCollection dataset = new XYSeriesCollection();
-		frame = new ApplicationFrame(title);  //
+		frame = new ApplicationFrame(title);
 		//graph:
 		XYSeries[] series = new XYSeries[rideData.size()];
-		for (int j = 0; j<rideData.size(); j++) {
+        
+        //Prints all of the rides on individual grpahs if it is raining in order to how rain affects each individually, otherwise just prints all rides on one graph
+		if (rain==true)
+		{
+            series[i] = new XYSeries(rideData.get(i).toString());
+			addAll(series[i], rideData.get(i).waittime);
+			dataset.addSeries(series[i]);	    
+		}
+		else
+		{
+		    for (int j = 0; j<rideData.size(); j++) 
+		    {
 			series[j] = new XYSeries(rideData.get(j).toString());
 			addAll(series[j], rideData.get(j).waittime);
 			dataset.addSeries(series[j]);
+		    }
 		}
 		chart = ChartFactory.createXYLineChart(title, "Time",
 				"wait time", dataset);
@@ -149,7 +200,7 @@ public class Park {
 		frame.setVisible(true);
 	}
 	
-	public void addAll(XYSeries s, int[] data) {
+ 	public void addAll(XYSeries s, int[] data) {
 		for (int i = 0; i < data.length; i++) {	
 			s.add(i, data[i]);
 		}

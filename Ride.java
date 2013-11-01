@@ -5,6 +5,7 @@ public class Ride {
 	public double APPEAL;    //the appeal of this ride.
 	public int RIDELENGTH;   //the number of minutes a ride takes
 	public int RIDERS;       //the number of riders per minute
+    public boolean INDOORS;  // wheter the ride is indoors or outdoors
 
 	//data:
 	public int[] waittime;  //wait time at each minute in the day.
@@ -33,6 +34,22 @@ public class Ride {
 			ride.put(null);
 		}
 	}
+    
+    /**
+       @author Scatman Screen aka Oliver Kafka
+       @param rain - Whether it is raining or not, established in the Park Class
+       @param r - Takes each ride, goes through a loop in the main
+     */
+    public void rain(boolean rain, Ride r)
+    {
+	if (rain==true)
+	    {
+		if(r.APPEAL >= .8 && r.INDOORS == false) r.APPEAL = 0;    //Closes the top rides(appeal above .8) that are outdoors during rain, because they become too dangerous to ride
+		else if (r.INDOORS == true) r.APPEAL = r.APPEAL + (1-r.APPEAL)*.5;
+	    }
+	
+    }
+    
 	
 	public void tick() {
 		//move the riders through:
